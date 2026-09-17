@@ -1,4 +1,3 @@
-
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import pandas as pd
@@ -7,21 +6,31 @@ import shap
 import numpy as np
 import os
 
-app = Flask(__name__)
-@app.route("/")
-def dashboard():
-    return send_from_directory("../dashboard", "index.html")
+# ==========================================
+# APP SETUP
+# ==========================================
 
-@app.route("/<path:filename>")
-def dashboard_files(filename):
-    return send_from_directory("../dashboard", filename)
+app = Flask(__name__)
 CORS(app)
+
+# ==========================================
+# BASE PATHS
+# ==========================================
+
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
+)
+
+DASHBOARD_DIR = os.path.join(
+    BASE_DIR,
+    "dashboard"
+)
 
 # ==========================================
 # FILE PATHS
 # ==========================================
-
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DATA_PATH = os.path.join(
     BASE_DIR,
@@ -45,25 +54,51 @@ ANOMALY_MODEL_PATH = os.path.join(
 # LOAD DATA + AI MODELS
 # ==========================================
 
-data = pd.read_csv(DATA_PATH, header=None)
+data = pd.read_csv(
+    DATA_PATH,
+    header=None
+)
 
-fault_model = joblib.load(FAULT_MODEL_PATH)
+fault_model = joblib.load(
+    FAULT_MODEL_PATH
+)
 
-anomaly_model = joblib.load(ANOMALY_MODEL_PATH)
+anomaly_model = joblib.load(
+    ANOMALY_MODEL_PATH
+)
 
 # SHAP explainer for Random Forest
-shap_explainer = shap.TreeExplainer(fault_model)
+shap_explainer = shap.TreeExplainer(
+    fault_model
+)
 
 current_index = 0
 
 
 # ==========================================
-# HOME
+# DASHBOARD
 # ==========================================
 
 @app.route("/")
-def home():
-    return "CHEM-GUARD AI Backend Running Successfully"
+def dashboard():
+
+    return send_from_directory(
+        DASHBOARD_DIR,
+        "index.html"
+    )
+
+
+# ==========================================
+# DASHBOARD STATIC FILES
+# ==========================================
+
+@app.route("/<path:filename>")
+def dashboard_files(filename):
+
+    return send_from_directory(
+        DASHBOARD_DIR,
+        filename
+    )
 
 
 # ==========================================
@@ -85,46 +120,74 @@ def metrics():
     # Important TEP sensor values
     # ------------------------------------------
 
-    temperature = float(row.iloc[8])   # XMEAS(9)
-    pressure = float(row.iloc[6])      # XMEAS(7)
-    flow = float(row.iloc[5])          # XMEAS(6)
-    level = float(row.iloc[7])         # XMEAS(8)
+    temperature = float(
+        row.iloc[8]
+    )
+
+    pressure = float(
+        row.iloc[6]
+    )
+
+    flow = float(
+        row.iloc[5]
+    )
+
+    level = float(
+        row.iloc[7]
+    )
 
     # ------------------------------------------
     # Prepare all 52 TEP features
     # ------------------------------------------
 
-    features = row.values.reshape(1, -1)
+    features = row.values.reshape(
+        1,
+        -1
+    )
 
     # ==========================================
     # 1. FAULT DIAGNOSIS
     # ==========================================
 
-    fault_prediction = fault_model.predict(features)[0]
+    fault_prediction = fault_model.predict(
+        features
+    )[0]
 
     # ==========================================
     # 2. ANOMALY DETECTION
     # ==========================================
 
-    anomaly_prediction = anomaly_model.predict(features)[0]
+    anomaly_prediction = anomaly_model.predict(
+        features
+    )[0]
 
     # ==========================================
     # 3. AI CONFIDENCE
     # ==========================================
 
-    fault_probabilities = fault_model.predict_proba(features)[0]
+    fault_probabilities = fault_model.predict_proba(
+        features
+    )[0]
 
-    confidence = max(fault_probabilities) * 100
+    confidence = (
+        max(fault_probabilities) * 100
+    )
 
     # ==========================================
     # 4. RISK LEVEL
     # ==========================================
 
-    if fault_prediction == 1 and anomaly_prediction == -1:
+    if (
+        fault_prediction == 1
+        and anomaly_prediction == -1
+    ):
 
         risk = "HIGH"
 
-    elif fault_prediction == 1 or anomaly_prediction == -1:
+    elif (
+        fault_prediction == 1
+        or anomaly_prediction == -1
+    ):
 
         risk = "MEDIUM"
 
@@ -137,13 +200,12 @@ def metrics():
     # ==========================================
 
     if fault_prediction == 1:
-        
-         diagnosis = "Process Fault Detected"
+
+        diagnosis = "Process Fault Detected"
 
     else:
 
-          diagnosis = "Normal Process"
-    
+        diagnosis = "Normal Process"
 
     # ==========================================
     # 6. ANOMALY STATUS
@@ -161,22 +223,32 @@ def metrics():
     # 7. SHAP EXPLAINABILITY
     # ==========================================
 
-    shap_result = shap_explainer(features)
+    shap_result = shap_explainer(
+        features
+    )
 
-    shap_array = np.asarray(shap_result.values)
+    shap_array = np.asarray(
+        shap_result.values
+    )
 
     # SHAP classifier output
     if shap_array.ndim == 3:
 
-        shap_values_sample = shap_array[0, :, 1]
+        shap_values_sample = (
+            shap_array[0, :, 1]
+        )
 
     elif shap_array.ndim == 2:
 
-        shap_values_sample = shap_array[0]
+        shap_values_sample = (
+            shap_array[0]
+        )
 
     else:
 
-        shap_values_sample = shap_array.flatten()
+        shap_values_sample = (
+            shap_array.flatten()
+        )
 
     shap_values_sample = np.asarray(
         shap_values_sample
@@ -198,7 +270,10 @@ def metrics():
     root_cause_data = []
 
     for i in range(
-        min(52, len(shap_values_sample))
+        min(
+            52,
+            len(shap_values_sample)
+        )
     ):
 
         root_cause_data.append({
@@ -211,7 +286,9 @@ def metrics():
             ),
 
             "impact": round(
-                float(shap_values_sample[i]),
+                float(
+                    shap_values_sample[i]
+                ),
                 6
             )
         })
@@ -221,18 +298,24 @@ def metrics():
     # ==========================================
 
     root_cause_data.sort(
-        key=lambda x: abs(x["impact"]),
+        key=lambda x: abs(
+            x["impact"]
+        ),
         reverse=True
     )
 
     # Top 5 important signals
-    top_root_causes = root_cause_data[:5]
+    top_root_causes = (
+        root_cause_data[:5]
+    )
 
     # ==========================================
     # 11. SAMPLE NUMBER
     # ==========================================
 
-    sample_number = current_index + 1
+    sample_number = (
+        current_index + 1
+    )
 
     # Move to next sample
     current_index += 1
@@ -298,5 +381,12 @@ def metrics():
 if __name__ == "__main__":
 
     app.run(
-        debug=True
+        host="0.0.0.0",
+        port=int(
+            os.environ.get(
+                "PORT",
+                5000
+            )
+        ),
+        debug=False
     )
