@@ -2,472 +2,2158 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>CHEM-GUARD AI</title>
 
+    <!-- Bootstrap -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
+    <!-- Font Awesome -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #06152f;
+            color: #f4f7ff;
+            overflow-x: hidden;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 230px;
+            height: 100vh;
+
+            background: #071a3a;
+            border-right: 1px solid #19365e;
+
+            z-index: 1000;
+        }
+
+        .logo {
+            height: 100px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 20px 24px;
+
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo i {
+            color: #b35cff;
+            font-size: 25px;
+            margin-right: 12px;
+        }
+
+        .logo span {
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .logo strong {
+            display: block;
+            color: #e94cff;
+        }
+
+        .sidebar nav {
+            margin-top: 30px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+
+            margin: 8px 12px;
+            padding: 15px 16px;
+
+            color: #b8c7e6;
+            text-decoration: none;
+
+            border-radius: 10px;
+
+            transition: 0.25s;
+        }
+
+        .nav-link i {
+            width: 28px;
+            font-size: 16px;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: #142f59;
+        }
+
+        .nav-link.active {
+            color: white;
+            background: linear-gradient(
+                135deg,
+                #5735d5,
+                #7139c9
+            );
+
+            box-shadow: 0 8px 25px rgba(100, 50, 220, 0.25);
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main-content {
+            margin-left: 230px;
+            padding: 35px 28px 50px;
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            margin-bottom: 25px;
+        }
+
+        .top-header h1 {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .top-header h1 span {
+            color: #d84cff;
+        }
+
+        .header-description {
+            color: #8fa8ce;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        .system-status {
+            color: #43e6aa;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            display: inline-block;
+
+            width: 9px;
+            height: 9px;
+
+            background: #43e6aa;
+
+            border-radius: 50%;
+
+            margin-right: 7px;
+
+            box-shadow: 0 0 12px #43e6aa;
+        }
+
+
+        /* =====================================================
+           SECTION TITLE
+        ===================================================== */
+
+        .section-heading {
+            margin: 55px 0 18px;
+        }
+
+        .section-heading h2 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .section-heading p {
+            color: #7892ba;
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           ALERT
+        ===================================================== */
+
+        .alert-banner {
+            background:
+                linear-gradient(
+                    135deg,
+                    #2a1936,
+                    #241b35
+                );
+
+            border: 1px solid #a34079;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .alert-icon {
+            width: 52px;
+            height: 52px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #44203e;
+
+            border-radius: 12px;
+
+            color: #ff4f86;
+            font-size: 22px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-label {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 6px;
+
+            background: #b83e6c;
+
+            font-size: 10px;
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 6px;
+        }
+
+        .alert-content h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .alert-content p {
+            color: #aebbd2;
+            font-size: 13px;
+        }
+
+        .alert-info {
+            display: flex;
+            gap: 30px;
+        }
+
+        .alert-info div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .alert-info small {
+            color: #8197ba;
+            font-size: 11px;
+        }
+
+        .alert-info strong {
+            margin-top: 5px;
+            font-size: 17px;
+        }
+
+
+        /* =====================================================
+           PANEL
+        ===================================================== */
+
+        .panel {
+            background: #081d40;
+
+            border: 1px solid #193b6b;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            margin-bottom: 20px;
+        }
+
+        .panel-header h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .panel-header h2 i {
+            color: #b95cff;
+            margin-right: 8px;
+        }
+
+        .panel-header p {
+            color: #7892ba;
+            font-size: 12px;
+        }
+
+        #updatedTime {
+            color: #7fa0ce;
+            font-size: 11px;
+        }
+
+
+        /* =====================================================
+           SENSOR CARDS
+        ===================================================== */
+
+        .sensor-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+        .sensor-card {
+            background: #0b254e;
+
+            border: 1px solid #214674;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            min-height: 145px;
+
+            transition: 0.25s;
+        }
+
+        .sensor-card:hover {
+            transform: translateY(-3px);
+
+            border-color: #7d55e8;
+
+            box-shadow:
+                0 8px 25px rgba(80, 50, 180, 0.18);
+        }
+
+        .sensor-icon {
+            font-size: 21px;
+
+            color: #b85cff;
+
+            margin-bottom: 12px;
+        }
+
+        .sensor-name {
+            display: block;
+
+            color: #8fa9cf;
+
+            font-size: 12px;
+
+            margin-bottom: 8px;
+        }
+
+        .sensor-card strong {
+            display: block;
+
+            font-size: 22px;
+
+            margin-bottom: 8px;
+        }
+
+        .sensor-card small {
+            color: #6f89af;
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
+           GRAPH
+        ===================================================== */
+
+        .chart-area {
+            position: relative;
+
+            width: 100%;
+
+            height: 350px;
+        }
+
+
+        /* =====================================================
+           DIAGNOSIS
+        ===================================================== */
+
+        .diagnosis-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.2fr 1fr;
+
+            gap: 18px;
+        }
+
+        .diagnosis-box {
+            background: #0b254e;
+
+            border: 1px solid #214674;
+
+            border-radius: 12px;
+
+            padding: 22px;
+        }
+
+        .diagnosis-box > span {
+            color: #7f99be;
+            font-size: 12px;
+        }
+
+        .diagnosis-box h3 {
+            font-size: 24px;
+
+            margin: 12px 0 20px;
+
+            color: #ffffff;
+        }
+
+        .diagnosis-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 10px;
+        }
+
+        .diagnosis-details div {
+            background: #071a38;
+
+            border-radius: 9px;
+
+            padding: 13px;
+        }
+
+        .diagnosis-details small {
+            display: block;
+
+            color: #718bb0;
+
+            font-size: 10px;
+
+            margin-bottom: 5px;
+        }
+
+        .diagnosis-details strong {
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           RECOMMENDATION
+        ===================================================== */
+
+        .recommendation {
+            background:
+                linear-gradient(
+                    135deg,
+                    #101f43,
+                    #10264c
+                );
+
+            border: 1px solid #2b4c7c;
+
+            border-radius: 12px;
+
+            padding: 22px;
+        }
+
+        .section-title {
+            color: #dce7fa;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            margin-bottom: 14px;
+        }
+
+        .section-title i {
+            color: #b95cff;
+            margin-right: 8px;
+        }
+
+        .recommendation p {
+            color: #aabbd4;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           ROOT CAUSE
+        ===================================================== */
+
+        .root-cause {
+            margin-top: 20px;
+
+            background: #071a38;
+
+            border-radius: 12px;
+
+            padding: 20px;
+        }
+
+        .root-cause ul {
+            list-style: none;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 9px;
+        }
+
+        .root-cause li {
+            background: #0b254e;
+
+            border: 1px solid #1c416d;
+
+            border-radius: 8px;
+
+            padding: 11px 13px;
+
+            color: #aebed8;
+
+            font-size: 12px;
+        }
+
+        .root-cause li strong {
+            color: #e3ecff;
+        }
+
+
+        /* =====================================================
+           PROCESS FLOW
+        ===================================================== */
+
+        .process-flow {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            min-width: 150px;
+
+            background: #081d40;
+
+            border: 1px solid #1c416d;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            text-align: center;
+        }
+
+        .process-icon {
+            width: 42px;
+            height: 42px;
+
+            margin: auto auto 10px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #1a2454;
+
+            color: #b85cff;
+
+            font-size: 17px;
+        }
+
+        .process-step strong {
+            display: block;
+
+            font-size: 13px;
+
+            margin-bottom: 5px;
+        }
+
+        .process-step span {
+            color: #718bb0;
+
+            font-size: 10px;
+        }
+
+        .flow-arrow {
+            color: #9b55e9;
+
+            font-size: 25px;
+        }
+
+
+        /* =====================================================
+           REPORTS
+        ===================================================== */
+
+        .report-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .report-card {
+            background: #081d40;
+
+            border: 1px solid #1c416d;
+
+            border-radius: 12px;
+
+            padding: 20px;
+        }
+
+        .report-card i {
+            color: #b85cff;
+
+            font-size: 22px;
+
+            margin-bottom: 12px;
+        }
+
+        .report-card h3 {
+            font-size: 15px;
+
+            margin-bottom: 7px;
+        }
+
+        .report-card p {
+            color: #7892ba;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           SETTINGS
+        ===================================================== */
+
+        .settings-box {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .setting-card {
+            background: #081d40;
+
+            border: 1px solid #1c416d;
+
+            border-radius: 12px;
+
+            padding: 18px;
+        }
+
+        .setting-card h3 {
+            font-size: 14px;
+
+            margin-bottom: 7px;
+        }
+
+        .setting-card p {
+            color: #7892ba;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            margin-top: 50px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #18385f;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #607da7;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .sensor-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .diagnosis-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .report-grid,
+            .settings-box {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 70px;
+            }
+
+            .logo span {
+                display: none;
+            }
+
+            .nav-link {
+                justify-content: center;
+            }
+
+            .nav-link i {
+                margin: 0;
+            }
+
+            .nav-link {
+                font-size: 0;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                padding: 20px 15px;
+            }
+
+            .top-header h1 {
+                font-size: 28px;
+            }
+
+            .sensor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .alert-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .alert-info {
+                width: 100%;
+            }
+
+            .root-cause {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-<div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
-        <div class="brand">
-            <i class="fa-solid fa-flask"></i>
-            CHEM-GUARD <span>AI</span>
-        </div>
+<aside class="sidebar">
 
-        <div class="menu active">
+    <div class="logo">
+
+        <i class="fa-solid fa-flask"></i>
+
+        <span>
+            CHEM-GUARD
+            <strong>AI</strong>
+        </span>
+
+    </div>
+
+
+    <nav>
+
+        <a href="#dashboard"
+           class="nav-link active">
+
             <i class="fa-solid fa-house"></i>
+
             Dashboard
-        </div>
 
-        <div class="menu">
+        </a>
+
+
+        <a href="#live-data"
+           class="nav-link">
+
             <i class="fa-solid fa-wave-square"></i>
+
             Live Data
-        </div>
 
-        <div class="menu">
+        </a>
+
+
+        <a href="#alerts"
+           class="nav-link">
+
             <i class="fa-solid fa-bell"></i>
+
             Alerts
-        </div>
 
-        <div class="menu">
+        </a>
+
+
+        <a href="#reports"
+           class="nav-link">
+
             <i class="fa-solid fa-file-lines"></i>
+
             Reports
-        </div>
 
-        <div class="menu">
+        </a>
+
+
+        <a href="#settings"
+           class="nav-link">
+
             <i class="fa-solid fa-gear"></i>
+
             Settings
+
+        </a>
+
+    </nav>
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main-content"
+      id="dashboard">
+
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+        <div>
+
+            <h1>
+                CHEM-GUARD <span>AI</span>
+            </h1>
+
+            <p class="header-description">
+                Intelligent Chemical Process Monitoring
+            </p>
+
         </div>
 
-    </aside>
+
+        <div class="system-status">
+
+            <span class="status-dot"></span>
+
+            System Online
+
+        </div>
+
+    </header>
 
 
-    <!-- MAIN CONTENT -->
-    <main class="main">
 
-        <!-- HEADER -->
-        <header class="header">
+    <!-- =================================================
+         ALERTS
+    ================================================= -->
+
+    <section class="alert-banner"
+             id="alerts">
+
+        <div class="alert-icon">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+
+        <div class="alert-content">
+
+            <span class="alert-label">
+                AI PROCESS ALERT
+            </span>
+
+            <h3 id="alertTitle">
+                Process Monitoring
+            </h3>
+
+            <p id="alertMessage">
+                Waiting for AI analysis...
+            </p>
+
+        </div>
+
+
+        <div class="alert-info">
 
             <div>
-                <h1>
-                    CHEM-GUARD <span>AI</span>
-                </h1>
+
+                <small>
+                    Confidence
+                </small>
+
+                <strong id="alertConfidence">
+                    --
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <small>
+                    Risk
+                </small>
+
+                <strong id="alertRisk">
+                    --
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         LIVE DATA
+    ================================================= -->
+
+    <div class="section-heading"
+         id="live-data">
+
+        <h2>
+            Live Process Monitoring
+        </h2>
+
+        <p>
+            Real-time Tennessee Eastman Process sensor data
+        </p>
+
+    </div>
+
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h2>
+                    <i class="fa-solid fa-wave-square"></i>
+                    Live Sensor Data
+                </h2>
 
                 <p>
-                    AI-Powered Chemical Process Fault Diagnosis
-                    <br>
-                    & Root-Cause Intelligence
+                    Continuous process measurements
                 </p>
+
             </div>
 
-            <div class="system-status">
-                <span class="online-dot"></span>
-                System Online
-            </div>
 
-        </header>
+            <span id="updatedTime">
+                Connecting...
+            </span>
 
-
-        <div class="tagline">
-            Detect. Diagnose. Explain. Prevent.
         </div>
 
 
-        <!-- ALERT -->
-        <section class="alert-box">
 
-            <div class="alert-icon">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
+        <div class="sensor-grid">
 
-            <div class="alert-content">
 
-                <span class="alert-label">
-                    ALERT
+            <div class="sensor-card">
+
+                <div class="sensor-icon">
+
+                    <i class="fa-solid fa-temperature-half"></i>
+
+                </div>
+
+                <span class="sensor-name">
+                    Temperature
                 </span>
 
+                <strong id="temperature">
+                    --
+                </strong>
+
+                <small>
+                    Reactor temperature
+                </small>
+
+            </div>
+
+
+
+            <div class="sensor-card">
+
+                <div class="sensor-icon">
+
+                    <i class="fa-solid fa-gauge-high"></i>
+
+                </div>
+
+                <span class="sensor-name">
+                    Pressure
+                </span>
+
+                <strong id="pressure">
+                    --
+                </strong>
+
+                <small>
+                    Reactor pressure
+                </small>
+
+            </div>
+
+
+
+            <div class="sensor-card">
+
+                <div class="sensor-icon">
+
+                    <i class="fa-solid fa-water"></i>
+
+                </div>
+
+                <span class="sensor-name">
+                    Flow Rate
+                </span>
+
+                <strong id="flow">
+                    --
+                </strong>
+
+                <small>
+                    Reactor feed flow
+                </small>
+
+            </div>
+
+
+
+            <div class="sensor-card">
+
+                <div class="sensor-icon">
+
+                    <i class="fa-solid fa-layer-group"></i>
+
+                </div>
+
+                <span class="sensor-name">
+                    Level
+                </span>
+
+                <strong id="level">
+                    --
+                </strong>
+
+                <small>
+                    Reactor level
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         GRAPH
+    ================================================= -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+
                 <h2>
-                    Possible Pipeline Blockage
+                    <i class="fa-solid fa-chart-line"></i>
+                    Sensor Trends
                 </h2>
 
                 <p>
-                    Confidence:
-                    <strong>89%</strong>
-
-                    &nbsp; • &nbsp;
-
-                    Risk:
-                    <span class="risk-high">
-                        HIGH
-                    </span>
+                    Live process behaviour
                 </p>
 
             </div>
 
-            <button>
-                View Details →
-            </button>
-
-        </section>
-
-
-        <!-- SENSOR + DIAGNOSIS -->
-        <div class="dashboard-grid">
-
-
-            <!-- LIVE SENSOR DATA -->
-            <section class="panel sensor-panel">
-
-                <div class="panel-title">
-
-                    <h2>
-                        <i class="fa-solid fa-wave-square"></i>
-                        Live Sensor Data
-                    </h2>
-
-                    <span>
-                        Last updated:
-                        <b id="updatedTime">--:--</b>
-                    </span>
-
-                </div>
-
-
-                <!-- SENSOR CARDS -->
-                <div class="sensor-cards">
-
-
-                    <!-- TEMPERATURE -->
-                    <div class="sensor-card">
-
-                        <i class="fa-solid fa-temperature-high"></i>
-
-                        <p>Temperature</p>
-
-                        <h3 id="temperature">
-                            92 °C
-                        </h3>
-
-                        <span class="status high">
-                            HIGH
-                        </span>
-
-                    </div>
-
-
-                    <!-- PRESSURE -->
-                    <div class="sensor-card">
-
-                        <i class="fa-solid fa-gauge-high"></i>
-
-                        <p>Pressure</p>
-
-                        <h3 id="pressure">
-                            4.8 bar
-                        </h3>
-
-                        <span class="status high">
-                            HIGH
-                        </span>
-
-                    </div>
-
-
-                    <!-- FLOW -->
-                    <div class="sensor-card">
-
-                        <i class="fa-solid fa-water"></i>
-
-                        <p>Flow Rate</p>
-
-                        <h3 id="flow">
-                            1.2 m³/h
-                        </h3>
-
-                        <span class="status low">
-                            LOW
-                        </span>
-
-                    </div>
-
-
-                    <!-- LEVEL -->
-                    <div class="sensor-card">
-
-                        <i class="fa-solid fa-layer-group"></i>
-
-                        <p>Level</p>
-
-                        <h3 id="level">
-                            68 %
-                        </h3>
-
-                        <span class="status normal">
-                            NORMAL
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- CHART -->
-                <div class="chart-area">
-
-                    <h3>
-                        Sensor Trends
-                        <small>(Last 1 hour)</small>
-                    </h3>
-
-                    <canvas id="sensorChart"></canvas>
-
-                </div>
-
-            </section>
-
-
-            <!-- AI DIAGNOSIS -->
-            <section class="panel diagnosis-panel">
-
-                <h2>
-                    <i class="fa-solid fa-brain"></i>
-                    AI Diagnosis
-                </h2>
-
-
-                <div class="diagnosis-box">
-
-                    <h3>
-                        Possible Pipeline Blockage
-                    </h3>
-
-                    <p>
-                        Confidence:
-                        <strong>89%</strong>
-
-                        &nbsp; • &nbsp;
-
-                        Risk:
-                        <span class="risk-high">
-                            HIGH
-                        </span>
-                    </p>
-
-                </div>
-
-
-                <!-- ROOT CAUSE -->
-                <div class="root-cause">
-
-                    <h3>
-                        <i class="fa-solid fa-lightbulb"></i>
-                        Root Cause Signals
-                    </h3>
-
-                    <ul>
-                        <li>Pressure rising</li>
-                        <li>Flow decreasing</li>
-                        <li>Multi-variable pattern detected</li>
-                    </ul>
-
-                </div>
-
-
-                <!-- RECOMMENDATION -->
-                <div class="recommendation">
-
-                    <h3>
-                        <i class="fa-solid fa-wrench"></i>
-                        Recommended Action
-                    </h3>
-
-                    <p>
-                        Inspect restriction / valve;
-                        evaluate load reduction.
-                    </p>
-
-                </div>
-
-            </section>
-
         </div>
 
 
-        <!-- BOTTOM SECTION -->
-        <div class="dashboard-grid bottom-grid">
+        <div class="chart-area">
+
+            <canvas id="sensorChart"></canvas>
+
+        </div>
+
+    </section>
 
 
-            <!-- PROCESS OVERVIEW -->
-            <section class="panel process-panel">
 
-                <h2>
-                    <i class="fa-solid fa-gears"></i>
-                    Process Overview
-                </h2>
+    <!-- =================================================
+         AI DIAGNOSIS
+    ================================================= -->
 
-                <div class="process-flow">
+    <div class="section-heading">
 
-                    <div class="process-step">
+        <h2>
+            AI Process Intelligence
+        </h2>
 
-                        <h3>
-                            <i class="fa-solid fa-temperature-half"></i>
-                        </h3>
+        <p>
+            Detect • Diagnose • Explain • Prevent
+        </p>
 
-                        <b>Sensors</b>
-
-                        <small>
-                            Temperature • Pressure
-                            <br>
-                            Flow • Level
-                        </small>
-
-                    </div>
+    </div>
 
 
-                    <span>→</span>
+    <section class="panel">
+
+        <div class="diagnosis-grid">
 
 
-                    <div class="process-step">
+            <!-- DIAGNOSIS -->
 
-                        <h3>
-                            <i class="fa-solid fa-brain"></i>
-                        </h3>
+            <div class="diagnosis-box">
 
-                        <b>AI Analysis</b>
+                <span>
+                    CURRENT DIAGNOSIS
+                </span>
 
-                        <small>
-                            Detect → Diagnose
-                            <br>
-                            Explain → Predict
-                        </small>
-
-                    </div>
+                <h3 id="diagnosisStatus">
+                    Analyzing Process...
+                </h3>
 
 
-                    <span>→</span>
+                <div class="diagnosis-details">
 
-
-                    <div class="process-step">
-
-                        <h3>
-                            <i class="fa-solid fa-display"></i>
-                        </h3>
-
-                        <b>Dashboard</b>
+                    <div>
 
                         <small>
-                            Alerts • Insights
-                            <br>
-                            Recommendations
+                            Confidence
                         </small>
+
+                        <strong id="diagnosisConfidence">
+                            --
+                        </strong>
 
                     </div>
 
 
-                    <span>→</span>
-
-
-                    <div class="process-step">
-
-                        <h3>
-                            <i class="fa-solid fa-user-check"></i>
-                        </h3>
-
-                        <b>Operator</b>
+                    <div>
 
                         <small>
-                            Validate / Take Action
+                            Risk
                         </small>
+
+                        <strong id="riskStatus">
+                            Analyzing
+                        </strong>
 
                     </div>
 
-                </div>
 
-            </section>
-
-
-            <!-- KEY METRICS -->
-            <section class="panel metrics-panel">
-
-                <h2>
-                    <i class="fa-solid fa-chart-simple"></i>
-                    Key Metrics
-                </h2>
-
-                <div class="metrics-grid">
-
-                    <div class="metric">
-
-                        <span>Total Alerts</span>
-
-                        <strong>3</strong>
+                    <div>
 
                         <small>
-                            Last 24h
+                            Pattern
                         </small>
 
-                    </div>
-
-
-                    <div class="metric">
-
-                        <span>Avg. Confidence</span>
-
-                        <strong>89%</strong>
-
-                    </div>
-
-
-                    <div class="metric">
-
-                        <span>Downtime Avoided</span>
-
-                        <strong>2.4 hrs</strong>
-
-                    </div>
-
-
-                    <div class="metric">
-
-                        <span>Risk Level</span>
-
-                        <strong class="danger">
-                            HIGH
+                        <strong id="anomalyStatus">
+                            Analyzing
                         </strong>
 
                     </div>
 
                 </div>
 
-            </section>
+            </div>
+
+
+
+            <!-- ACTION -->
+
+            <div class="recommendation">
+
+                <div class="section-title">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    Recommended Action
+
+                </div>
+
+
+                <p id="recommendedAction">
+
+                    Waiting for AI diagnosis...
+
+                </p>
+
+            </div>
 
         </div>
 
-    </main>
-
-</div>
 
 
-<!-- CHART.JS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- ROOT CAUSES -->
 
-<script src="script.js"></script>
+        <div class="root-cause">
+
+            <div class="section-title">
+
+                <i class="fa-solid fa-lightbulb"></i>
+
+                SHAP Root Cause Signals
+
+            </div>
+
+
+            <ul id="rootCauseList">
+
+                <li>
+                    Waiting for SHAP analysis...
+                </li>
+
+            </ul>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         PROCESS FLOW
+    ================================================= -->
+
+    <div class="section-heading">
+
+        <h2>
+            Process Intelligence Flow
+        </h2>
+
+        <p>
+            From sensor data to operator action
+        </p>
+
+    </div>
+
+
+    <section class="process-flow">
+
+
+        <div class="process-step">
+
+            <div class="process-icon">
+
+                <i class="fa-solid fa-satellite-dish"></i>
+
+            </div>
+
+            <strong>
+                Sensors
+            </strong>
+
+            <span>
+                Process Data
+            </span>
+
+        </div>
+
+
+        <div class="flow-arrow">
+            →
+        </div>
+
+
+        <div class="process-step">
+
+            <div class="process-icon">
+
+                <i class="fa-solid fa-brain"></i>
+
+            </div>
+
+            <strong>
+                AI Analysis
+            </strong>
+
+            <span>
+                Detect & Diagnose
+            </span>
+
+        </div>
+
+
+        <div class="flow-arrow">
+            →
+        </div>
+
+
+        <div class="process-step">
+
+            <div class="process-icon">
+
+                <i class="fa-solid fa-lightbulb"></i>
+
+            </div>
+
+            <strong>
+                Explain
+            </strong>
+
+            <span>
+                SHAP Insights
+            </span>
+
+        </div>
+
+
+        <div class="flow-arrow">
+            →
+        </div>
+
+
+        <div class="process-step">
+
+            <div class="process-icon">
+
+                <i class="fa-solid fa-user-shield"></i>
+
+            </div>
+
+            <strong>
+                Operator
+            </strong>
+
+            <span>
+                Take Action
+            </span>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         REPORTS
+    ================================================= -->
+
+    <div class="section-heading"
+         id="reports">
+
+        <h2>
+            Reports
+        </h2>
+
+        <p>
+            Process analysis and monitoring information
+        </p>
+
+    </div>
+
+
+    <section class="report-grid">
+
+        <div class="report-card">
+
+            <i class="fa-solid fa-chart-column"></i>
+
+            <h3>
+                Sensor Report
+            </h3>
+
+            <p>
+                Monitor process sensor behaviour and historical trends.
+            </p>
+
+        </div>
+
+
+        <div class="report-card">
+
+            <i class="fa-solid fa-brain"></i>
+
+            <h3>
+                AI Diagnosis Report
+            </h3>
+
+            <p>
+                Review detected faults, confidence and AI analysis.
+            </p>
+
+        </div>
+
+
+        <div class="report-card">
+
+            <i class="fa-solid fa-lightbulb"></i>
+
+            <h3>
+                Root Cause Report
+            </h3>
+
+            <p>
+                Review SHAP-based variables contributing to the diagnosis.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SETTINGS
+    ================================================= -->
+
+    <div class="section-heading"
+         id="settings">
+
+        <h2>
+            Settings
+        </h2>
+
+        <p>
+            CHEM-GUARD AI system configuration
+        </p>
+
+    </div>
+
+
+    <section class="settings-box">
+
+        <div class="setting-card">
+
+            <h3>
+                <i class="fa-solid fa-database"></i>
+                Dataset
+            </h3>
+
+            <p>
+                Tennessee Eastman Process benchmark
+            </p>
+
+        </div>
+
+
+        <div class="setting-card">
+
+            <h3>
+                <i class="fa-solid fa-robot"></i>
+                AI Models
+            </h3>
+
+            <p>
+                Isolation Forest + Random Forest + SHAP
+            </p>
+
+        </div>
+
+
+        <div class="setting-card">
+
+            <h3>
+                <i class="fa-solid fa-server"></i>
+                Backend
+            </h3>
+
+            <p>
+                Flask API running on local system
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <span>
+            CHEM-GUARD AI
+        </span>
+
+        <span>
+            Explainable Chemical Process Intelligence
+        </span>
+
+    </footer>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+// =====================================================
+// ELEMENTS
+// =====================================================
+
+const temperature =
+    document.getElementById("temperature");
+
+const pressure =
+    document.getElementById("pressure");
+
+const flow =
+    document.getElementById("flow");
+
+const level =
+    document.getElementById("level");
+
+const updatedTime =
+    document.getElementById("updatedTime");
+
+const diagnosisStatus =
+    document.getElementById("diagnosisStatus");
+
+const anomalyStatus =
+    document.getElementById("anomalyStatus");
+
+const diagnosisConfidence =
+    document.getElementById("diagnosisConfidence");
+
+const riskStatus =
+    document.getElementById("riskStatus");
+
+const recommendedAction =
+    document.getElementById("recommendedAction");
+
+const rootCauseList =
+    document.getElementById("rootCauseList");
+
+const alertTitle =
+    document.getElementById("alertTitle");
+
+const alertMessage =
+    document.getElementById("alertMessage");
+
+const alertConfidence =
+    document.getElementById("alertConfidence");
+
+const alertRisk =
+    document.getElementById("alertRisk");
+
+
+// =====================================================
+// GRAPH DATA
+// =====================================================
+
+const labels = [];
+
+const temperatureData = [];
+const pressureData = [];
+const flowData = [];
+const levelData = [];
+
+
+// =====================================================
+// GRAPH
+// =====================================================
+
+const canvas =
+    document.getElementById("sensorChart");
+
+let sensorChart = null;
+
+
+if (
+    canvas &&
+    typeof Chart !== "undefined"
+) {
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    sensorChart = new Chart(ctx, {
+
+        type: "line",
+
+        data: {
+
+            labels: labels,
+
+            datasets: [
+
+                {
+                    label: "Temperature",
+                    data: temperatureData,
+                    yAxisID: "temperatureAxis",
+                    tension: 0.35,
+                    borderWidth: 2,
+                    pointRadius: 2
+                },
+
+                {
+                    label: "Pressure",
+                    data: pressureData,
+                    yAxisID: "pressureAxis",
+                    tension: 0.35,
+                    borderWidth: 2,
+                    pointRadius: 2
+                },
+
+                {
+                    label: "Flow",
+                    data: flowData,
+                    yAxisID: "flowAxis",
+                    tension: 0.35,
+                    borderWidth: 2,
+                    pointRadius: 2
+                },
+
+                {
+                    label: "Level",
+                    data: levelData,
+                    yAxisID: "levelAxis",
+                    tension: 0.35,
+                    borderWidth: 2,
+                    pointRadius: 2
+                }
+
+            ]
+
+        },
+
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            animation: false,
+
+            interaction: {
+                mode: "index",
+                intersect: false
+            },
+
+
+            plugins: {
+
+                legend: {
+                    display: true
+                }
+
+            },
+
+
+            scales: {
+
+                x: {
+
+                    ticks: {
+                        maxTicksLimit: 10
+                    }
+
+                },
+
+
+                temperatureAxis: {
+
+                    type: "linear",
+
+                    position: "left",
+
+                    beginAtZero: false
+
+                },
+
+
+                pressureAxis: {
+
+                    type: "linear",
+
+                    position: "right",
+
+                    beginAtZero: false,
+
+                    grid: {
+                        drawOnChartArea: false
+                    }
+
+                },
+
+
+                flowAxis: {
+
+                    type: "linear",
+
+                    position: "left",
+
+                    display: false
+
+                },
+
+
+                levelAxis: {
+
+                    type: "linear",
+
+                    position: "right",
+
+                    display: false
+
+                }
+
+            }
+
+        }
+
+    });
+
+
+    console.log(
+        "CHEM-GUARD AI graph initialized."
+    );
+
+}
+
+
+// =====================================================
+// GET FLASK DATA
+// =====================================================
+
+async function getSensorData() {
+
+    try {
+
+        const response =
+            await fetch(
+                "http://127.0.0.1:5000/metrics"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " + response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "TEP data:",
+            data
+        );
+
+
+        // =================================================
+        // SENSOR VALUES
+        // =================================================
+
+        temperature.textContent =
+            data.temperature + " °C";
+
+        pressure.textContent =
+            data.pressure;
+
+        flow.textContent =
+            data.flow;
+
+        level.textContent =
+            data.level + "%";
+
+
+        updatedTime.textContent =
+            "Sample: " + data.sample;
+
+
+        // =================================================
+        // AI DIAGNOSIS
+        // =================================================
+
+        diagnosisStatus.textContent =
+            data.diagnosis || "Analyzing";
+
+
+        anomalyStatus.textContent =
+            data.anomaly || "Analyzing";
+
+
+        diagnosisConfidence.textContent =
+            data.confidence !== undefined
+                ? data.confidence + "%"
+                : "--";
+
+
+        riskStatus.textContent =
+            data.risk || "Analyzing";
+
+
+        // =================================================
+        // ALERT
+        // =================================================
+
+        if (
+            data.diagnosis === "Fault 1" ||
+            data.diagnosis === "Process Fault Detected"
+        ) {
+
+            alertTitle.textContent =
+                "Process Fault Detected";
+
+            alertMessage.textContent =
+                "AI detected an abnormal chemical process pattern.";
+
+        }
+        else {
+
+            alertTitle.textContent =
+                "Process Operating Normally";
+
+            alertMessage.textContent =
+                "No process fault detected in the current sample.";
+
+        }
+
+
+        alertConfidence.textContent =
+            data.confidence !== undefined
+                ? data.confidence + "%"
+                : "--";
+
+
+        alertRisk.textContent =
+            data.risk || "--";
+
+
+        // =================================================
+        // RECOMMENDED ACTION
+        // =================================================
+
+        if (
+            data.diagnosis === "Fault 1" ||
+            data.diagnosis === "Process Fault Detected"
+        ) {
+
+            recommendedAction.textContent =
+                "Investigate the abnormal process pattern and inspect the highest-impact sensor signals identified by SHAP.";
+
+        }
+        else {
+
+            recommendedAction.textContent =
+                "Process appears normal. Continue monitoring sensor conditions.";
+
+        }
+
+
+        // =================================================
+        // SHAP ROOT CAUSES
+        // =================================================
+
+        rootCauseList.innerHTML = "";
+
+
+        if (
+            data.root_causes &&
+            data.root_causes.length > 0
+        ) {
+
+            data.root_causes.forEach(
+                function(cause) {
+
+                    const li =
+                        document.createElement("li");
+
+
+                    const impact =
+                        Number(cause.impact);
+
+
+                    const direction =
+                        impact >= 0
+                            ? "↑"
+                            : "↓";
+
+
+                    li.innerHTML =
+                        `<strong>
+                            ${cause.feature}
+                        </strong>
+                        &nbsp;
+                        ${direction}
+                        Impact: ${cause.impact}
+                        &nbsp; | &nbsp;
+                        Value: ${cause.value}`;
+
+
+                    rootCauseList.appendChild(li);
+
+                }
+            );
+
+        }
+        else {
+
+            rootCauseList.innerHTML =
+                "<li>No significant root-cause signals detected.</li>";
+
+        }
+
+
+        // =================================================
+        // GRAPH DATA
+        // =================================================
+
+        labels.push(
+            "S" + data.sample
+        );
+
+
+        temperatureData.push(
+            Number(data.temperature)
+        );
+
+
+        pressureData.push(
+            Number(data.pressure)
+        );
+
+
+        flowData.push(
+            Number(data.flow)
+        );
+
+
+        levelData.push(
+            Number(data.level)
+        );
+
+
+        // =================================================
+        // KEEP LAST 30 SAMPLES
+        // =================================================
+
+        if (labels.length > 30) {
+
+            labels.shift();
+
+            temperatureData.shift();
+
+            pressureData.shift();
+
+            flowData.shift();
+
+            levelData.shift();
+
+        }
+
+
+        // =================================================
+        // UPDATE GRAPH
+        // =================================================
+
+        if (sensorChart) {
+
+            sensorChart.update();
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "CHEM-GUARD Backend Error:",
+            error
+        );
+
+
+        updatedTime.textContent =
+            "Backend Offline";
+
+    }
+
+}
+
+
+// =====================================================
+// NAVIGATION
+// =====================================================
+
+const navLinks =
+    document.querySelectorAll(".nav-link");
+
+
+navLinks.forEach(
+    function(link) {
+
+        link.addEventListener(
+            "click",
+            function() {
+
+                navLinks.forEach(
+                    function(item) {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                this.classList.add(
+                    "active"
+                );
+
+            }
+        );
+
+    }
+);
+
+
+// =====================================================
+// START
+// =====================================================
+
+// First sample
+getSensorData();
+
+
+// New sample every 2 seconds
+setInterval(
+    getSensorData,
+    2000
+);
+
+</script>
+
 
 </body>
 
