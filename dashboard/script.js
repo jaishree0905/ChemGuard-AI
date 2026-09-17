@@ -20,7 +20,6 @@ const recommendedAction = document.getElementById("recommendedAction");
 
 const rootCauseList = document.getElementById("rootCauseList");
 
-
 // =====================================================
 // GRAPH DATA
 // =====================================================
@@ -31,7 +30,6 @@ const temperatureData = [];
 const pressureData = [];
 const flowData = [];
 const levelData = [];
-
 
 // =====================================================
 // CREATE SENSOR GRAPH
@@ -50,7 +48,6 @@ if (canvas && typeof Chart !== "undefined") {
         type: "line",
 
         data: {
-
             labels: labels,
 
             datasets: [
@@ -92,7 +89,6 @@ if (canvas && typeof Chart !== "undefined") {
                 }
 
             ]
-
         },
 
         options: {
@@ -119,14 +115,11 @@ if (canvas && typeof Chart !== "undefined") {
             scales: {
 
                 x: {
-
                     ticks: {
                         maxTicksLimit: 10
                     }
-
                 },
 
-                // Temperature axis
                 yTemperature: {
 
                     type: "linear",
@@ -142,7 +135,6 @@ if (canvas && typeof Chart !== "undefined") {
 
                 },
 
-                // Pressure axis
                 yPressure: {
 
                     type: "linear",
@@ -162,7 +154,6 @@ if (canvas && typeof Chart !== "undefined") {
 
                 },
 
-                // Flow axis
                 yFlow: {
 
                     type: "linear",
@@ -175,7 +166,6 @@ if (canvas && typeof Chart !== "undefined") {
 
                 },
 
-                // Level axis
                 yLevel: {
 
                     type: "linear",
@@ -205,7 +195,6 @@ else {
 
 }
 
-
 // =====================================================
 // GET DATA FROM FLASK BACKEND
 // =====================================================
@@ -214,9 +203,12 @@ async function getSensorData() {
 
     try {
 
-        const response = await fetch(
-            "http://127.0.0.1:5000/metrics"
-        );
+        // IMPORTANT:
+        // Use the deployed Flask backend on the same Render domain.
+        const response = await fetch("/metrics", {
+            method: "GET",
+            cache: "no-store"
+        });
 
         if (!response.ok) {
 
@@ -229,7 +221,6 @@ async function getSensorData() {
         const data = await response.json();
 
         console.log("TEP data:", data);
-
 
         // =================================================
         // SENSOR VALUES
@@ -270,7 +261,6 @@ async function getSensorData() {
 
         }
 
-
         // =================================================
         // AI DIAGNOSIS
         // =================================================
@@ -305,7 +295,6 @@ async function getSensorData() {
 
         }
 
-
         // =================================================
         // RECOMMENDED ACTION
         // =================================================
@@ -329,7 +318,6 @@ async function getSensorData() {
             }
 
         }
-
 
         // =================================================
         // SHAP ROOT CAUSES
@@ -379,7 +367,6 @@ async function getSensorData() {
 
         }
 
-
         // =================================================
         // ADD DATA TO GRAPH
         // =================================================
@@ -404,7 +391,6 @@ async function getSensorData() {
             Number(data.level)
         );
 
-
         // =================================================
         // KEEP ONLY LAST 30 SAMPLES
         // =================================================
@@ -422,7 +408,6 @@ async function getSensorData() {
             levelData.shift();
 
         }
-
 
         // =================================================
         // UPDATE GRAPH
@@ -453,14 +438,12 @@ async function getSensorData() {
 
 }
 
-
 // =====================================================
 // START DASHBOARD
 // =====================================================
 
 // Get first TEP sample immediately
 getSensorData();
-
 
 // Get new TEP sample every 2 seconds
 setInterval(
