@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Python / Flask
+instance/
+
+# Model files
+*.pkl
+
+# Large TEP datasets
+data/*.dat
+data/*.csv

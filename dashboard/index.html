@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CHEM-GUARD AI</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <i class="fa-solid fa-flask"></i>
+            CHEM-GUARD <span>AI</span>
+        </div>
+
+        <div class="menu active">
+            <i class="fa-solid fa-house"></i>
+            Dashboard
+        </div>
+
+        <div class="menu">
+            <i class="fa-solid fa-wave-square"></i>
+            Live Data
+        </div>
+
+        <div class="menu">
+            <i class="fa-solid fa-bell"></i>
+            Alerts
+        </div>
+
+        <div class="menu">
+            <i class="fa-solid fa-file-lines"></i>
+            Reports
+        </div>
+
+        <div class="menu">
+            <i class="fa-solid fa-gear"></i>
+            Settings
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- HEADER -->
+        <header class="header">
+
+            <div>
+                <h1>
+                    CHEM-GUARD <span>AI</span>
+                </h1>
+
+                <p>
+                    AI-Powered Chemical Process Fault Diagnosis
+                    <br>
+                    & Root-Cause Intelligence
+                </p>
+            </div>
+
+            <div class="system-status">
+                <span class="online-dot"></span>
+                System Online
+            </div>
+
+        </header>
+
+
+        <div class="tagline">
+            Detect. Diagnose. Explain. Prevent.
+        </div>
+
+
+        <!-- ALERT -->
+        <section class="alert-box">
+
+            <div class="alert-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div class="alert-content">
+
+                <span class="alert-label">
+                    ALERT
+                </span>
+
+                <h2>
+                    Possible Pipeline Blockage
+                </h2>
+
+                <p>
+                    Confidence:
+                    <strong>89%</strong>
+
+                    &nbsp; • &nbsp;
+
+                    Risk:
+                    <span class="risk-high">
+                        HIGH
+                    </span>
+                </p>
+
+            </div>
+
+            <button>
+                View Details →
+            </button>
+
+        </section>
+
+
+        <!-- SENSOR + DIAGNOSIS -->
+        <div class="dashboard-grid">
+
+
+            <!-- LIVE SENSOR DATA -->
+            <section class="panel sensor-panel">
+
+                <div class="panel-title">
+
+                    <h2>
+                        <i class="fa-solid fa-wave-square"></i>
+                        Live Sensor Data
+                    </h2>
+
+                    <span>
+                        Last updated:
+                        <b id="updatedTime">--:--</b>
+                    </span>
+
+                </div>
+
+
+                <!-- SENSOR CARDS -->
+                <div class="sensor-cards">
+
+
+                    <!-- TEMPERATURE -->
+                    <div class="sensor-card">
+
+                        <i class="fa-solid fa-temperature-high"></i>
+
+                        <p>Temperature</p>
+
+                        <h3 id="temperature">
+                            92 °C
+                        </h3>
+
+                        <span class="status high">
+                            HIGH
+                        </span>
+
+                    </div>
+
+
+                    <!-- PRESSURE -->
+                    <div class="sensor-card">
+
+                        <i class="fa-solid fa-gauge-high"></i>
+
+                        <p>Pressure</p>
+
+                        <h3 id="pressure">
+                            4.8 bar
+                        </h3>
+
+                        <span class="status high">
+                            HIGH
+                        </span>
+
+                    </div>
+
+
+                    <!-- FLOW -->
+                    <div class="sensor-card">
+
+                        <i class="fa-solid fa-water"></i>
+
+                        <p>Flow Rate</p>
+
+                        <h3 id="flow">
+                            1.2 m³/h
+                        </h3>
+
+                        <span class="status low">
+                            LOW
+                        </span>
+
+                    </div>
+
+
+                    <!-- LEVEL -->
+                    <div class="sensor-card">
+
+                        <i class="fa-solid fa-layer-group"></i>
+
+                        <p>Level</p>
+
+                        <h3 id="level">
+                            68 %
+                        </h3>
+
+                        <span class="status normal">
+                            NORMAL
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHART -->
+                <div class="chart-area">
+
+                    <h3>
+                        Sensor Trends
+                        <small>(Last 1 hour)</small>
+                    </h3>
+
+                    <canvas id="sensorChart"></canvas>
+
+                </div>
+
+            </section>
+
+
+            <!-- AI DIAGNOSIS -->
+            <section class="panel diagnosis-panel">
+
+                <h2>
+                    <i class="fa-solid fa-brain"></i>
+                    AI Diagnosis
+                </h2>
+
+
+                <div class="diagnosis-box">
+
+                    <h3>
+                        Possible Pipeline Blockage
+                    </h3>
+
+                    <p>
+                        Confidence:
+                        <strong>89%</strong>
+
+                        &nbsp; • &nbsp;
+
+                        Risk:
+                        <span class="risk-high">
+                            HIGH
+                        </span>
+                    </p>
+
+                </div>
+
+
+                <!-- ROOT CAUSE -->
+                <div class="root-cause">
+
+                    <h3>
+                        <i class="fa-solid fa-lightbulb"></i>
+                        Root Cause Signals
+                    </h3>
+
+                    <ul>
+                        <li>Pressure rising</li>
+                        <li>Flow decreasing</li>
+                        <li>Multi-variable pattern detected</li>
+                    </ul>
+
+                </div>
+
+
+                <!-- RECOMMENDATION -->
+                <div class="recommendation">
+
+                    <h3>
+                        <i class="fa-solid fa-wrench"></i>
+                        Recommended Action
+                    </h3>
+
+                    <p>
+                        Inspect restriction / valve;
+                        evaluate load reduction.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- BOTTOM SECTION -->
+        <div class="dashboard-grid bottom-grid">
+
+
+            <!-- PROCESS OVERVIEW -->
+            <section class="panel process-panel">
+
+                <h2>
+                    <i class="fa-solid fa-gears"></i>
+                    Process Overview
+                </h2>
+
+                <div class="process-flow">
+
+                    <div class="process-step">
+
+                        <h3>
+                            <i class="fa-solid fa-temperature-half"></i>
+                        </h3>
+
+                        <b>Sensors</b>
+
+                        <small>
+                            Temperature • Pressure
+                            <br>
+                            Flow • Level
+                        </small>
+
+                    </div>
+
+
+                    <span>→</span>
+
+
+                    <div class="process-step">
+
+                        <h3>
+                            <i class="fa-solid fa-brain"></i>
+                        </h3>
+
+                        <b>AI Analysis</b>
+
+                        <small>
+                            Detect → Diagnose
+                            <br>
+                            Explain → Predict
+                        </small>
+
+                    </div>
+
+
+                    <span>→</span>
+
+
+                    <div class="process-step">
+
+                        <h3>
+                            <i class="fa-solid fa-display"></i>
+                        </h3>
+
+                        <b>Dashboard</b>
+
+                        <small>
+                            Alerts • Insights
+                            <br>
+                            Recommendations
+                        </small>
+
+                    </div>
+
+
+                    <span>→</span>
+
+
+                    <div class="process-step">
+
+                        <h3>
+                            <i class="fa-solid fa-user-check"></i>
+                        </h3>
+
+                        <b>Operator</b>
+
+                        <small>
+                            Validate / Take Action
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- KEY METRICS -->
+            <section class="panel metrics-panel">
+
+                <h2>
+                    <i class="fa-solid fa-chart-simple"></i>
+                    Key Metrics
+                </h2>
+
+                <div class="metrics-grid">
+
+                    <div class="metric">
+
+                        <span>Total Alerts</span>
+
+                        <strong>3</strong>
+
+                        <small>
+                            Last 24h
+                        </small>
+
+                    </div>
+
+
+                    <div class="metric">
+
+                        <span>Avg. Confidence</span>
+
+                        <strong>89%</strong>
+
+                    </div>
+
+
+                    <div class="metric">
+
+                        <span>Downtime Avoided</span>
+
+                        <strong>2.4 hrs</strong>
+
+                    </div>
+
+
+                    <div class="metric">
+
+                        <span>Risk Level</span>
+
+                        <strong class="danger">
+                            HIGH
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
